@@ -49,9 +49,10 @@ RUN apt-get -q autoclean && \
 ENV VARNISH_BACKEND_PORT 80
 ENV VARNISH_BACKEND_IP 172.17.42.1
 ENV VARNISH_PORT 80
+ENV VARNISH_MEMORY 100M
 
 EXPOSE 80 6082
 
-ADD scripts/varnish /varnish
+COPY scripts/varnish /usr/local/bin/start-varnishd
 
-CMD ["varnish"]
+CMD ["start-varnishd"]
