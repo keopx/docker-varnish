@@ -14,26 +14,30 @@ RUN \
   echo "deb http://ftp.de.debian.org/debian/ jessie main non-free contrib\n" > /etc/apt/sources.list && \
   echo "deb-src http://ftp.de.debian.org/debian/ jessie main non-free contrib\n" >> /etc/apt/sources.list && \
   echo "deb http://security.debian.org/ jessie/updates main contrib non-free\n" >> /etc/apt/sources.list && \
-  echo "deb-src http://security.debian.org/ jessie/updates main contrib non-free" >> /etc/apt/sources.list
-  
-# Update repositories cache and distribution
-RUN apt-get -qq update && apt-get -qqy upgrade
+  echo "deb-src http://security.debian.org/ jessie/updates main contrib non-free" >> /etc/apt/sources.list && \
+  # Update repositories cache and distribution
+  apt-get -qq update && apt-get -qqy upgrade
 
 # Install some basic tools needed for deployment
 RUN apt-get -yqq install --no-install-recommends \
   curl \
-  python
+  wget \
+  python \
+  ca-certificates \
+  debian-archive-keyring \
+  apt-transport-https
 
 # Configure Varnish-cache sources
 RUN \
-  curl http://repo.varnish-cache.org/GPG-key.txt | apt-key add -- && \
-  echo "deb http://repo.varnish-cache.org/debian/ jessie varnish-4.0" >> /etc/apt/sources.list.d/varnish-cache.list && \
+  wget -qO - https://packagecloud.io/varnishcache/varnish40/gpgkey | apt-key add -- &&\
+  echo "deb https://packagecloud.io/varnishcache/varnish40/debian/ jessie main" >> /etc/apt/sources.list.d/varnish-cache.list && \
+  echo "deb-src https://packagecloud.io/varnishcache/varnish40/debian/ jessie main" >> /etc/apt/sources.list.d/varnish-cache.list && \
   apt-get -qq update
 
 # Install Varnish-cache
 RUN apt-get -yqq install \
   varnish --no-install-recommends
-  
+
 #
 # Step 3: Clean the system
 #
