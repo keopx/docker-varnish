@@ -14,10 +14,9 @@ RUN \
   echo "deb http://ftp.de.debian.org/debian/ stretch main non-free contrib\n" > /etc/apt/sources.list && \
   echo "deb-src http://ftp.de.debian.org/debian/ stretch main non-free contrib\n" >> /etc/apt/sources.list && \
   echo "deb http://security.debian.org/ stretch/updates main contrib non-free\n" >> /etc/apt/sources.list && \
-  echo "deb-src http://security.debian.org/ stretch/updates main contrib non-free" >> /etc/apt/sources.list
-  
-# Update repositories cache and distribution
-RUN apt-get -qq update && apt-get -qqy upgrade
+  echo "deb-src http://security.debian.org/ stretch/updates main contrib non-free" >> /etc/apt/sources.list && \
+  # Update repositories cache and distribution
+  apt-get -qq update && apt-get -qqy upgrade
 
 # Install some basic tools needed for deployment
 RUN apt-get -yqq install --no-install-recommends \
@@ -29,13 +28,13 @@ RUN apt-get -yqq install --no-install-recommends \
 
 # Configure Varnish-cache sources
 RUN \
-  curl -s https://packagecloud.io/install/repositories/varnishcache/varnish5/script.deb.sh | bash && \
+  curl -s https://packagecloud.io/install/repositories/varnishcache/varnish51/script.deb.sh | bash && \
   apt-get -qq update
 
 # Install Varnish-cache
 RUN apt-get -yqq install \
   varnish --no-install-recommends
-  
+
 #
 # Step 3: Clean the system
 #
